@@ -1,19 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import htmlDecode from './helpers/html-decode';
+import QuizQuestion from './interfaces/QuizQuestion';
+import GameInstance from './components/GameInstance';
 
 import './App.css';
 
 interface QuizData {
   response_code: number;
   results: QuizQuestion[];
-}
-interface QuizQuestion {
-  category: string;
-  type: string;
-  difficulty: string;
-  question: string;
-  correct_answer: string;
-  incorrect_answers: string;
 }
 
 const App: React.FC = () => {
@@ -25,25 +18,32 @@ const App: React.FC = () => {
   }
 
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
+  const [gameStatus, setGameStatus] = useState<boolean>(false);
 
   useEffect(() => {
     fetchQuestions()
       .then(data => setQuestions(data.results))
       .catch(err => console.warn(err));
-  }, []);
+  }, [gameStatus]);
 
-  const questionsList = questions.map(item => (
-    <li key={item.question} className="questions_list-item">
-      {htmlDecode(item.question)}
-    </li>
-  ));
+  const handleStartGame = (): void => {
+    setGameStatus(!gameStatus);
+  };
 
   return (
     <div className="App">
       <header className="App-header">
         <h1>Computer Quiz.</h1>
       </header>
-      <main>{questionsList.length <= 0 ? 'Loading Questions...' : questionsList}</main>
+      <main>
+        {!gameStatus ? (
+          <button type="button" onClick={handleStartGame}>
+            Start Quiz
+          </button>
+        ) : (
+          <GameInstance questions={questions} />
+        )}
+      </main>
     </div>
   );
 };
