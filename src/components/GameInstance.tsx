@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import QuizQuestion from '../interfaces/QuizQuestion';
-import QuestionCard from './QuestionCard';
+import QuestionCard from './QuestionCard/QuestionCard';
 import Timer from './Timer';
 
 interface GameInstanceProps {

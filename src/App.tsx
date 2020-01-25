@@ -27,9 +27,7 @@ const App: React.FC = () => {
       try {
         fetchQuestions()
           .then(data => {
-            console.log('1', data.results[0].question);
-            console.log('2', data.results[1].question);
-            console.log('3', data.results[2].question);
+            console.log(data.results);
             return data;
           })
           .then(data => setQuestions(data.results))
@@ -55,9 +53,7 @@ const App: React.FC = () => {
       try {
         fetchQuestions()
           .then(data => {
-            console.log('1', data.results[0].question);
-            console.log('2', data.results[1].question);
-            console.log('3', data.results[2].question);
+            console.log(data.results);
             return data;
           })
           .then(data => setQuestions(data.results))
@@ -67,7 +63,7 @@ const App: React.FC = () => {
       }
       setLoading(false);
     }
-    setGameInProgress(true);
+    setGameInProgress(false);
   };
 
   return (
