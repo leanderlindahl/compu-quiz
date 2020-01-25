@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import QuizQuestion from '../interfaces/QuizQuestion';
 import QuestionCard from './QuestionCard';
 import Timer from './Timer';
@@ -9,14 +9,28 @@ interface GameInstanceProps {
 
 const GameInstance: React.FC<GameInstanceProps> = ({ questions }) => {
   const [questionIndex, setQuestionIndex] = useState(0);
+  const [secondsToCount, setSecondsToCount] = useState(10);
+
   const handleNextClick = (): void => {
+    setSecondsToCount(10);
     questionIndex < questions.length && setQuestionIndex(questionIndex + 1);
   };
-  const nextButton = questionIndex < questions.length - 1 && (
-    <button type="button" onClick={handleNextClick}>
-      Next
-    </button>
-  );
+  const handleTimerEnds = (): void => {
+    console.log('Timer ended...');
+  };
+  const nextButton =
+    questionIndex < questions.length - 1 ? (
+      <button type="button" onClick={handleNextClick}>
+        Next
+      </button>
+    ) : (
+      <button type="button">View Result</button>
+    );
+
+  useEffect(() => {
+    console.log('useEffect ran');
+    setQuestionIndex(0);
+  }, [questions]);
 
   return (
     <>
@@ -29,7 +43,9 @@ const GameInstance: React.FC<GameInstanceProps> = ({ questions }) => {
               Question {questionIndex + 1} of {questions.length}
             </p>
             <QuestionCard question={questions[questionIndex]} />
-            <Timer />
+            {questions.length > 0 && (
+              <Timer whenTimerEnds={handleTimerEnds} secondsToCount={secondsToCount} reloadTimer={questionIndex} />
+            )}
           </>
         )}
       </div>

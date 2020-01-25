@@ -1,21 +1,28 @@
 import React, { useState, useEffect } from 'react';
 
-const Timer: React.FC = () => {
-  const [seconds, setSeconds] = useState(9);
-  let countdown: NodeJS.Timeout;
+interface TimerProps {
+  whenTimerEnds: any;
+  secondsToCount: number;
+  reloadTimer: number;
+}
 
-  const stopTimer: Function = (): void => {
-    clearInterval(countdown);
-    console.log('Timer stopped...');
-  };
+const Timer: React.FC<TimerProps> = ({ whenTimerEnds, secondsToCount, reloadTimer }) => {
+  const [seconds, setSeconds] = useState(secondsToCount);
+
+  useEffect(() => {
+    console.log('Timer cleanup/umount');
+    setSeconds(secondsToCount);
+  }, [reloadTimer]);
 
   useEffect(() => {
     if (seconds > 0) {
-      countdown = setTimeout(() => setSeconds(seconds - 1), 1000);
+      const countdown = setTimeout(() => setSeconds(seconds - 1), 1000);
+      return (): void => clearInterval(countdown);
     } else {
-      stopTimer();
+      console.log('Timer stopped...');
+      whenTimerEnds();
     }
-  });
+  }, [seconds]);
 
   return (
     <div>
